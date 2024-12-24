@@ -37,10 +37,12 @@
 #define PNG_WRITESMALL                  316
 #define IDS_FOLDER_COPY_TITLE           317
 #define IDS_FOLDER_MOVE_TITLE           318
+#define IDD_GOTO_PAGE                   319
 #define IDC_CUSTOM_CONTROL              1000
 #define IDC_STATUS                      1001
 #define IDC_PROGRESS                    1002
 #define IDC_FILENAME                    1003
+#define IDC_PAGE_NUMBER                 1004
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define IDC_TWITTER                     32771
 #define IDC_LINKEDIN                    32772
@@ -67,14 +69,15 @@
 #define ID_FILE_DELETE                  32801
 #define ID_PROPERTIES                   32802
 #define ID_ANIMATION                    32803
+#define ID_OPENPAGE                     32804
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        319
-#define _APS_NEXT_COMMAND_VALUE         32804
-#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_RESOURCE_VALUE        320
+#define _APS_NEXT_COMMAND_VALUE         32805
+#define _APS_NEXT_CONTROL_VALUE         1005
 #define _APS_NEXT_SYMED_VALUE           314
 #endif
 #endif

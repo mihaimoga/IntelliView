@@ -27,6 +27,7 @@ IntelliView. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #include "IntelliViewDoc.h"
 #include "IntelliViewView.h"
 #include "RenameDlg.h"
+#include "GotoPageDlg.h"
 
 #include <propkey.h>
 
@@ -47,6 +48,10 @@ BEGIN_MESSAGE_MAP(CIntelliViewDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_NEXT_PAGE, &CIntelliViewDoc::OnUpdateNextPage)
 	ON_COMMAND(ID_LAST_PAGE, &CIntelliViewDoc::OnLastPage)
 	ON_UPDATE_COMMAND_UI(ID_LAST_PAGE, &CIntelliViewDoc::OnUpdateLastPage)
+	ON_COMMAND(ID_OPENPAGE, &CIntelliViewDoc::OnOpenPage)
+	ON_UPDATE_COMMAND_UI(ID_OPENPAGE, &CIntelliViewDoc::OnUpdateOpenPage)
+	ON_COMMAND(ID_ANIMATION, &CIntelliViewDoc::OnAnimation)
+	ON_UPDATE_COMMAND_UI(ID_ANIMATION, &CIntelliViewDoc::OnUpdateAnimation)
 	ON_COMMAND(ID_FILE_RENAME, &CIntelliViewDoc::OnFileRename)
 	ON_UPDATE_COMMAND_UI(ID_FILE_RENAME, &CIntelliViewDoc::OnUpdateFileRename)
 	ON_COMMAND(ID_FILE_MOVE, &CIntelliViewDoc::OnFileMove)
@@ -57,8 +62,6 @@ BEGIN_MESSAGE_MAP(CIntelliViewDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_FILE_DELETE, &CIntelliViewDoc::OnUpdateFileDelete)
 	ON_COMMAND(ID_PROPERTIES, &CIntelliViewDoc::OnProperties)
 	ON_UPDATE_COMMAND_UI(ID_PROPERTIES, &CIntelliViewDoc::OnUpdateProperties)
-	ON_COMMAND(ID_ANIMATION, &CIntelliViewDoc::OnAnimation)
-	ON_UPDATE_COMMAND_UI(ID_ANIMATION, &CIntelliViewDoc::OnUpdateAnimation)
 END_MESSAGE_MAP()
 
 // CIntelliViewDoc construction/destruction
@@ -352,6 +355,29 @@ void CIntelliViewDoc::OnUpdateLastPage(CCmdUI* pCmdUI)
 	else
 #pragma warning(suppress: 26486)
 		pCmdUI->Enable(FALSE);
+}
+
+void CIntelliViewDoc::OnOpenPage()
+{
+#pragma warning(suppress: 26429)
+	CIntelliViewView* pView{ GetView() };
+	ASSERT(pView != nullptr);
+	CGotoPageDlg dlg;
+	dlg.m_nMaxPageNumber = pView->m_nFrames; //NOLINT(clang-analyzer-core.NullDereference)
+	if (dlg.DoModal() != IDOK)
+		return;
+	pView->m_nActivePage = dlg.m_nPageNumber - 1;
+#pragma warning(suppress: 26489)
+	pView->m_pImage.reset();
+	pView->InvalidateRect(nullptr, FALSE);
+}
+
+void CIntelliViewDoc::OnUpdateOpenPage(CCmdUI* pCmdUI)
+{
+	const CIntelliViewView* pView{ GetView() };
+	ASSERT(pView != nullptr);
+#pragma warning(suppress: 26486)
+	pCmdUI->Enable(pView->m_ImageType == CIntelliViewView::IMAGE_TYPE::MULTIPAGE_IMAGE); //NOLINT(clang-analyzer-core.NullDereference)
 }
 
 void CIntelliViewDoc::OnAnimation()

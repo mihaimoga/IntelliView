@@ -36,10 +36,11 @@ The _IntelliView_ menu features the application's most important functions:
 - **Actual Size**: Shows the image at 100% magnification.
 - **Best Fit**: Fits the image to the current window size.
 - **Full Screen**: Shows the image in a full screen window.
-- **First Page**: Views the first page in current image.
-- **Previous Page**: Views the previous page in current image.
-- **Next Page**: Views the next page in current image.
-- **Last Page**: Views the last page in current image.
+- **First Page**: Views the first page in the current image.
+- **Previous Page**: Views the previous page in the current image.
+- **Next Page**: Views the next page in the current image.
+- **Last Page**: Views the last page in the current image.
+- **Open Page Number**: View a specific page in the current image.
 - **Start/Stop Animation**: Starts or stops the animation for the current image.
 
 ## Create and Submit your Pull Request

@@ -64,6 +64,8 @@ protected:
 	afx_msg void OnUpdateNextPage(CCmdUI* pCmdUI);
 	afx_msg void OnLastPage();
 	afx_msg void OnUpdateLastPage(CCmdUI* pCmdUI);
+	afx_msg void OnOpenPage();
+	afx_msg void OnUpdateOpenPage(CCmdUI* pCmdUI);
 	afx_msg void OnAnimation();
 	afx_msg void OnUpdateAnimation(CCmdUI* pCmdUI);
 

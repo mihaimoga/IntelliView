@@ -189,6 +189,7 @@
     <ClInclude Include="ChildFrame.h" />
     <ClInclude Include="EdgeWebBrowser.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GotoPageDlg.h" />
     <ClInclude Include="HLinkCtrl.h" />
     <ClInclude Include="IntelliView.h" />
     <ClInclude Include="IntelliViewDoc.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="CheckForUpdatesDlg.cpp" />
     <ClCompile Include="ChildFrame.cpp" />
     <ClCompile Include="EdgeWebBrowser.cpp" />
+    <ClCompile Include="GotoPageDlg.cpp" />
     <ClCompile Include="HLinkCtrl.cpp" />
     <ClCompile Include="IntelliView.cpp" />
     <ClCompile Include="IntelliViewDoc.cpp" />
