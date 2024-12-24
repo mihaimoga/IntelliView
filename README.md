@@ -40,6 +40,7 @@ The _IntelliView_ menu features the application's most important functions:
 - **Previous Page**: Views the previous page in current image.
 - **Next Page**: Views the next page in current image.
 - **Last Page**: Views the last page in current image.
+- **Start/Stop Animation**: Starts or stops the animation for the current image.
 
 ## Create and Submit your Pull Request
 

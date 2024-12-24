@@ -57,6 +57,8 @@ BEGIN_MESSAGE_MAP(CIntelliViewDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_FILE_DELETE, &CIntelliViewDoc::OnUpdateFileDelete)
 	ON_COMMAND(ID_PROPERTIES, &CIntelliViewDoc::OnProperties)
 	ON_UPDATE_COMMAND_UI(ID_PROPERTIES, &CIntelliViewDoc::OnUpdateProperties)
+	ON_COMMAND(ID_ANIMATION, &CIntelliViewDoc::OnAnimation)
+	ON_UPDATE_COMMAND_UI(ID_ANIMATION, &CIntelliViewDoc::OnUpdateAnimation)
 END_MESSAGE_MAP()
 
 // CIntelliViewDoc construction/destruction
@@ -350,6 +352,44 @@ void CIntelliViewDoc::OnUpdateLastPage(CCmdUI* pCmdUI)
 	else
 #pragma warning(suppress: 26486)
 		pCmdUI->Enable(FALSE);
+}
+
+void CIntelliViewDoc::OnAnimation()
+{
+#pragma warning(suppress: 26429)
+	CIntelliViewView* pView{ GetView() };
+	ASSERT(pView != nullptr);
+	if (pView->m_nAnimationTimerID == 0) //NOLINT(clang-analyzer-core.NullDereference)
+	{
+		if (pView->m_ImageType == CIntelliViewView::IMAGE_TYPE::MULTIPAGE_IMAGE)
+		{
+#pragma warning(suppress: 26472)
+			if (pView->m_nActivePage == static_cast<int>(pView->m_nFrames - 1))
+				pView->m_nActivePage = 0;
+			pView->m_nAnimationTimerID = pView->SetTimer(2, theApp.m_nSlideshowInterval * 1000, nullptr);
+		}
+		else if (pView->m_ImageType == CIntelliViewView::IMAGE_TYPE::ANIMATED_GIF)
+			pView->ComposeNextGifFrame();
+	}
+	else
+		pView->StopAnimation();
+}
+
+void CIntelliViewDoc::OnUpdateAnimation(CCmdUI* pCmdUI)
+{
+	const CIntelliViewView* pView{ GetView() };
+	ASSERT(pView != nullptr);
+#pragma warning(suppress: 26486)
+	if ((pView->m_ImageType == CIntelliViewView::IMAGE_TYPE::MULTIPAGE_IMAGE) || (pView->m_ImageType == CIntelliViewView::IMAGE_TYPE::ANIMATED_GIF)) //NOLINT(clang-analyzer-core.NullDereference)
+	{
+#pragma warning(suppress: 26486)
+		pCmdUI->Enable(true);
+#pragma warning(suppress: 26486)
+		pCmdUI->SetCheck(pView->m_nAnimationTimerID != 0);
+	}
+	else
+#pragma warning(suppress: 26486)
+		pCmdUI->Enable(false);
 }
 
 void CIntelliViewDoc::OnFileRename()

@@ -125,7 +125,8 @@ protected:
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg LRESULT OnRecreatedResources(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnDraw2D(WPARAM wParam, LPARAM lParam);
-public:
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+
 	afx_msg void OnZoomIn();
 	afx_msg void OnUpdateZoomIn(CCmdUI* pCmdUI);
 	afx_msg void OnZoomOut();

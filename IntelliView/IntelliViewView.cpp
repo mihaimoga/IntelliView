@@ -60,6 +60,7 @@ BEGIN_MESSAGE_MAP(CIntelliViewView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_ACTUAL_SIZE, &CIntelliViewView::OnUpdateActualSize)
 	ON_COMMAND(ID_BESTFIT, &CIntelliViewView::OnBestFit)
 	ON_UPDATE_COMMAND_UI(ID_BESTFIT, &CIntelliViewView::OnUpdateBestFit)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 // CIntelliViewView construction/destruction
@@ -1214,6 +1215,41 @@ LRESULT CIntelliViewView::OnDraw2D(WPARAM /*wParam*/, LPARAM lParam)
 	}
 
 	return TRUE;
+}
+
+void CIntelliViewView::OnTimer(UINT_PTR nIDEvent)
+{
+	if ((m_nSlideshowTimerID == nIDEvent) && !theApp.m_bMessageBoxUp)
+	{
+		// Go to the next message
+		AfxGetMainWnd()->SendMessage(WM_COMMAND, ID_NEXT_PAGE);
+	}
+	else if (m_nAnimationTimerID == nIDEvent)
+	{
+		if (m_ImageType == IMAGE_TYPE::ANIMATED_GIF)
+		{
+			// Timer expired, display the next frame and set a new timer if needed
+			ComposeNextGifFrame();
+			InvalidateRect(nullptr, FALSE);
+		}
+		else if (m_ImageType == IMAGE_TYPE::MULTIPAGE_IMAGE)
+		{
+#pragma warning(suppress: 26472)
+			if (m_nActivePage < static_cast<int>(m_nFrames - 1))
+			{
+				++m_nActivePage;
+				m_pImage.reset();
+				InvalidateRect(nullptr, FALSE);
+			}
+			else
+				StopAnimation();
+		}
+	}
+	else
+	{
+		// Let the base class do its thing
+		__super::OnTimer(nIDEvent);
+	}
 }
 
 void CIntelliViewView::OnZoomIn()

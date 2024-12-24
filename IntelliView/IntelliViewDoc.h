@@ -64,7 +64,9 @@ protected:
 	afx_msg void OnUpdateNextPage(CCmdUI* pCmdUI);
 	afx_msg void OnLastPage();
 	afx_msg void OnUpdateLastPage(CCmdUI* pCmdUI);
-public:
+	afx_msg void OnAnimation();
+	afx_msg void OnUpdateAnimation(CCmdUI* pCmdUI);
+
 	afx_msg void OnFileRename();
 	afx_msg void OnUpdateFileRename(CCmdUI* pCmdUI);
 	afx_msg void OnFileMove();
