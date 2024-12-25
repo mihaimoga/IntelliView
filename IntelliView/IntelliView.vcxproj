@@ -233,7 +233,9 @@
     <Image Include="res\buttons.bmp" />
     <Image Include="res\crosshatch.png" />
     <Image Include="res\filelarge.bmp" />
+    <Image Include="res\filelarge.png" />
     <Image Include="res\filesmall.bmp" />
+    <Image Include="res\filesmall.png" />
     <Image Include="res\IntelliView.ico" />
     <Image Include="res\IntelliViewDoc.ico" />
     <Image Include="res\main.bmp" />

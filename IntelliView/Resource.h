@@ -38,6 +38,8 @@
 #define IDS_FOLDER_COPY_TITLE           317
 #define IDS_FOLDER_MOVE_TITLE           318
 #define IDD_GOTO_PAGE                   319
+#define PNG_FILELARGE                   320
+#define PNG_FILESMALL                   321
 #define IDC_CUSTOM_CONTROL              1000
 #define IDC_STATUS                      1001
 #define IDC_PROGRESS                    1002
@@ -75,7 +77,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        320
+#define _APS_NEXT_RESOURCE_VALUE        322
 #define _APS_NEXT_COMMAND_VALUE         32805
 #define _APS_NEXT_CONTROL_VALUE         1005
 #define _APS_NEXT_SYMED_VALUE           314
