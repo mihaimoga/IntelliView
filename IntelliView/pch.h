@@ -35,22 +35,13 @@ IntelliView. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 
 #include <afxwin.h>
 #include <afxext.h>
+#include <atlsync.h>
+#include <string>
+#include <vector>
+#include <algorithm>
 #include <memory>
 #include <array>
-#include <vector>
-#include <string_view>
-
-#include <string>
-#include <sstream>
-#include <iomanip>
-#include <atlsync.h>
-#include <vector>
-#include <map>
-#include <codecvt>
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <cctype>
+#include <filesystem>
 
 #define INSTALLER_URL _T("https://www.moga.doctor/freeware/IntelliViewSetup.msi")
 #define APPLICATION_URL _T("https://www.moga.doctor/freeware/IntelliView.xml")
