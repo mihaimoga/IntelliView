@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2026 Stefan-Mihai MOGA
+/* Copyright (C) 2024-2026 Stefan-Mihai MOGA
 This file is part of IntelliView application developed by Stefan-Mihai MOGA.
 IntelliView is an alternative Windows version to the famous Microsoft Photo!
 
