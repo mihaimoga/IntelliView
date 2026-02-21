@@ -51,6 +51,10 @@ CCheckForUpdatesDlg::~CCheckForUpdatesDlg()
 {
 }
 
+/**
+ * @brief Exchanges data between dialog controls and member variables
+ * @param pDX Pointer to a CDataExchange object used for data exchange and validation
+ */
 void CCheckForUpdatesDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
@@ -98,6 +102,11 @@ DWORD WINAPI UpdateThreadProc(LPVOID lpParam)
 	// return 0;
 }
 
+/**
+ * @brief Initializes the dialog when it is created
+ * @return TRUE to set focus to the first control, FALSE otherwise
+ * @note In debug mode, writes a config file with installer URL
+ */
 BOOL CCheckForUpdatesDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -117,6 +126,10 @@ BOOL CCheckForUpdatesDlg::OnInitDialog()
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
+/**
+ * @brief Handles the cancel button or ESC key press
+ * @note Waits for the update thread to finish before closing the dialog
+ */
 void CCheckForUpdatesDlg::OnCancel()
 {
 	while (g_bThreadRunning)
@@ -124,6 +137,11 @@ void CCheckForUpdatesDlg::OnCancel()
 	CDialogEx::OnCancel();
 }
 
+/**
+ * @brief Handles timer events to monitor the update check thread status
+ * @param nIDEvent ID of the timer that triggered the event
+ * @note Closes the dialog when the update thread completes and posts quit message if update found
+ */
 void CCheckForUpdatesDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	CDialogEx::OnTimer(nIDEvent);

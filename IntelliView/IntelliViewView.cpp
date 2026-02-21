@@ -39,6 +39,12 @@ IntelliView. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #define new DEBUG_NEW
 #endif
 
+/**
+ * @class CIntelliViewView
+ * @brief View class for IntelliView image viewer application
+ * @details Handles image rendering, zoom, animation, and Direct2D drawing operations
+ */
+
 // CIntelliViewView
 
 IMPLEMENT_DYNCREATE(CIntelliViewView, CScrollView)
@@ -65,6 +71,10 @@ END_MESSAGE_MAP()
 
 // CIntelliViewView construction/destruction
 
+/**
+ * @brief Constructs a new CIntelliViewView object
+ * @details Initializes all image state variables, zoom levels, animation timers, and enables Direct2D support
+ */
 CIntelliViewView::CIntelliViewView() noexcept : m_ImageType{ IMAGE_TYPE::UNDEFINED },
 	m_nActivePage{ -1 },
 	m_nFrames{ 0 },
@@ -87,10 +97,18 @@ CIntelliViewView::CIntelliViewView() noexcept : m_ImageType{ IMAGE_TYPE::UNDEFIN
 	EnableD2DSupport(TRUE);
 }
 
+/**
+ * @brief Destroys the CIntelliViewView object
+ */
 CIntelliViewView::~CIntelliViewView()
 {
 }
 
+/**
+ * @brief Modifies the window class or styles before window creation
+ * @param cs Reference to CREATESTRUCT containing window creation parameters
+ * @return TRUE on success, FALSE on failure
+ */
 BOOL CIntelliViewView::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: Modify the Window class or styles here by modifying
@@ -101,6 +119,11 @@ BOOL CIntelliViewView::PreCreateWindow(CREATESTRUCT& cs)
 
 // CIntelliViewView drawing
 
+/**
+ * @brief Handles GDI drawing operations (not used, Direct2D is used instead)
+ * @param pDC Pointer to device context (unused)
+ * @details This method is overridden but drawing is handled by OnDraw2D for Direct2D rendering
+ */
 void CIntelliViewView::OnDraw(CDC* /*pDC*/)
 {
 	CIntelliViewDoc* pDoc = GetDocument();
@@ -111,6 +134,10 @@ void CIntelliViewView::OnDraw(CDC* /*pDC*/)
 	// TODO: add draw code for native data here
 }
 
+/**
+ * @brief Initializes the view after creation
+ * @details Sets up initial scroll sizes for the view
+ */
 void CIntelliViewView::OnInitialUpdate()
 {
 	CScrollView::OnInitialUpdate();
@@ -123,6 +150,12 @@ void CIntelliViewView::OnInitialUpdate()
 
 // CIntelliViewView printing
 
+/**
+ * @brief Calculates the size to draw the image at
+ * @param rClient Reference to CRect containing the client area dimensions
+ * @return CSize containing the calculated width and height for drawing
+ * @details Applies zoom level and size-to-fit calculations to determine optimal image size
+ */
 CSize CIntelliViewView::DrawSize(_In_ const CRect& rClient)
 {
 	//Validate our parameters
@@ -154,6 +187,10 @@ CSize CIntelliViewView::DrawSize(_In_ const CRect& rClient)
 	return { static_cast<int>(imageSize.width * m_nCurrentZoomLevelX / 100), static_cast<int>(imageSize.height * m_nCurrentZoomLevelX / 100) };
 }
 
+/**
+ * @brief Stops the current animation playback
+ * @details Kills the animation timer if one is active
+ */
 void CIntelliViewView::StopAnimation()
 {
 	if (m_nAnimationTimerID != 0)
@@ -163,6 +200,11 @@ void CIntelliViewView::StopAnimation()
 	}
 }
 
+/**
+ * @brief Creates a Direct2D render target if one doesn't exist or is invalid
+ * @return true if render target is valid or was successfully created, false otherwise
+ * @details Ensures a valid hardware render target exists for drawing operations
+ */
 bool CIntelliViewView::CreateRenderTargetIfNecessary()
 {
 	if (m_pRenderTarget == nullptr)
@@ -180,7 +222,14 @@ bool CIntelliViewView::CreateRenderTargetIfNecessary()
 	return true;
 }
 
-#pragma warning(suppress: 26429)
+/**
+ * @brief Loads a QOI (Quite OK Image) format file
+ * @param lpszPathName Pointer to string containing the file path
+ * @param pRenderTarget Pointer to Direct2D render target
+ * @param bitmap Reference to unique_ptr that will receive the loaded bitmap
+ * @return S_OK on success, error HRESULT on failure
+ * @details Reads QOI file, converts RGBA to premultiplied RGBA, and creates D2D bitmap
+ */
 HRESULT CIntelliViewView::LoadQOI(_In_z_ LPCTSTR lpszPathName, _In_ ID2D1RenderTarget* pRenderTarget, _Inout_ std::unique_ptr<CD2DBitmap>& bitmap)
 {
 	// Validate our parameters
@@ -241,6 +290,11 @@ HRESULT CIntelliViewView::LoadQOI(_In_z_ LPCTSTR lpszPathName, _In_ ID2D1RenderT
 	return S_OK;
 }
 
+/**
+ * @brief Retrieves global metadata from the image decoder
+ * @return S_OK on success, error HRESULT on failure
+ * @details Extracts frame count, background color, dimensions, and loop information for GIF animations
+ */
 HRESULT CIntelliViewView::GetGlobalMetadata()
 {
 	// Validate our parameters
@@ -340,7 +394,14 @@ HRESULT CIntelliViewView::GetGlobalMetadata()
 	return hr;
 }
 
-#pragma warning(suppress: 26429)
+/**
+ * @brief Retrieves a raw frame from a GIF image
+ * @param pRenderTarget Pointer to render target for creating the bitmap
+ * @param uFrameIndex Index of the frame to retrieve
+ * @param pGifRawFrame Reference to unique_ptr that will receive the frame bitmap
+ * @return S_OK on success, error HRESULT on failure
+ * @details Decodes a GIF frame and extracts position, delay, and disposal method metadata
+ */
 HRESULT CIntelliViewView::GetRawFrame(_In_ CRenderTarget* pRenderTarget, _In_ UINT uFrameIndex, _Inout_ std::unique_ptr<CD2DBitmap>& pGifRawFrame)
 {
 	// Validate our parameters
@@ -472,7 +533,12 @@ HRESULT CIntelliViewView::GetRawFrame(_In_ CRenderTarget* pRenderTarget, _In_ UI
 	return hr;
 }
 
-#pragma warning(suppress: 26429)
+/**
+ * @brief Retrieves EXIF orientation data from image metadata
+ * @param pMetadataQueryReader Pointer to metadata query reader
+ * @return S_OK on success, error HRESULT on failure
+ * @details Reads EXIF orientation flag for JPEG and other formats that support it
+ */
 HRESULT CIntelliViewView::GetOrientationData(_In_ IWICMetadataQueryReader* pMetadataQueryReader)
 {
 	// Validate our parameters
@@ -496,7 +562,12 @@ HRESULT CIntelliViewView::GetOrientationData(_In_ IWICMetadataQueryReader* pMeta
 	return hr;
 }
 
-#pragma warning(suppress: 26429)
+/**
+ * @brief Retrieves the background color from GIF metadata
+ * @param pMetadataQueryReader Pointer to metadata query reader
+ * @return S_OK on success, error HRESULT on failure
+ * @details Extracts background color index from palette and converts to D2D color
+ */
 HRESULT CIntelliViewView::GetGifBackgroundColor(_In_ IWICMetadataQueryReader* pMetadataQueryReader)
 {
 	// If we have a global palette, get the palette and background color
@@ -563,7 +634,11 @@ HRESULT CIntelliViewView::GetGifBackgroundColor(_In_ IWICMetadataQueryReader* pM
 	return S_OK;
 }
 
-#pragma warning(suppress: 26440)
+/**
+ * @brief Restores a previously saved GIF frame
+ * @return S_OK on success, error HRESULT on failure
+ * @details Used for GIF disposal method "restore to previous" to restore frame state
+ */
 HRESULT CIntelliViewView::RestoreSavedGifFrame()
 {
 	if (m_pGifSavedFrame == nullptr)
@@ -575,7 +650,11 @@ HRESULT CIntelliViewView::RestoreSavedGifFrame()
 	return frameToCopyTo.CopyFromBitmap(m_pGifSavedFrame.get());
 }
 
-#pragma warning(suppress: 26440)
+/**
+ * @brief Clears the current GIF frame area to background color
+ * @return S_OK on success, error HRESULT on failure
+ * @details Used for GIF disposal method "restore to background"
+ */
 HRESULT CIntelliViewView::ClearCurrentGifFrameArea()
 {
 	// Validate our parameters
@@ -594,7 +673,11 @@ HRESULT CIntelliViewView::ClearCurrentGifFrameArea()
 	return m_FrameComposeRT.EndDraw();
 }
 
-#pragma warning(suppress: 26440)
+/**
+ * @brief Disposes of the current GIF frame according to its disposal method
+ * @return S_OK on success, error HRESULT on failure
+ * @details Handles NONE, BACKGROUND, and PREVIOUS disposal methods per GIF specification
+ */
 HRESULT CIntelliViewView::DisposeCurrentGifFrame()
 {
 	HRESULT hr{ S_OK };
@@ -627,6 +710,13 @@ HRESULT CIntelliViewView::DisposeCurrentGifFrame()
 	return hr;
 }
 
+/**
+ * @brief Overlays the next GIF frame for copying to another render target
+ * @param pRenderTarget Pointer to render target
+ * @param FrameComposeRT Reference to bitmap render target for frame composition
+ * @return S_OK on success, error HRESULT on failure
+ * @details Composes the next frame into the specified render target
+ */
 HRESULT CIntelliViewView::OverlayNextGifFrameForCopy(_In_ CRenderTarget* pRenderTarget, _Inout_ CBitmapRenderTarget& FrameComposeRT)
 {
 	// Validate our parameters
@@ -658,6 +748,11 @@ HRESULT CIntelliViewView::OverlayNextGifFrameForCopy(_In_ CRenderTarget* pRender
 	return hr;
 }
 
+/**
+ * @brief Overlays the next GIF frame onto the composition
+ * @return S_OK on success, error HRESULT on failure
+ * @details Advances animation by composing next frame, handling loop count and disposal
+ */
 HRESULT CIntelliViewView::OverlayNextGifFrame()
 {
 	// Validate our parameters
@@ -700,6 +795,11 @@ HRESULT CIntelliViewView::OverlayNextGifFrame()
 	return hr;
 }
 
+/**
+ * @brief Saves the current composed GIF frame
+ * @return S_OK on success, error HRESULT on failure
+ * @details Creates a backup of the composed frame for "restore to previous" disposal method
+ */
 HRESULT CIntelliViewView::SaveComposedGifFrame()
 {
 	// Validate our parameters
@@ -735,7 +835,14 @@ HRESULT CIntelliViewView::SaveComposedGifFrame()
 	return m_pGifSavedFrame->CopyFromBitmap(&frameToBeSaved);
 }
 
-#pragma warning(suppress: 26429)
+/**
+ * @brief Loads a normal (non-animated) image frame
+ * @param nFrame Frame index to load
+ * @param pRenderTarget Pointer to Direct2D render target
+ * @param bitmap Reference to unique_ptr that will receive the loaded bitmap
+ * @return S_OK on success, error HRESULT on failure
+ * @details Loads image frame, applies EXIF orientation transformation if enabled
+ */
 HRESULT CIntelliViewView::LoadNormalFrame(_In_ int nFrame, _In_ ID2D1RenderTarget* pRenderTarget, _Inout_ std::unique_ptr<CD2DBitmap>& bitmap)
 {
 	// Validate our parameters
@@ -835,6 +942,12 @@ HRESULT CIntelliViewView::LoadNormalFrame(_In_ int nFrame, _In_ ID2D1RenderTarge
 	return S_OK;
 }
 
+/**
+ * @brief Retrieves detailed information about an image file
+ * @param pszFilename Pointer to string containing the image file path
+ * @return S_OK on success, error HRESULT on failure
+ * @details Detects image type (single, multi-page, animated GIF), creates decoder, extracts metadata
+ */
 HRESULT CIntelliViewView::GetImageDetails(_In_z_ LPCTSTR pszFilename)
 {
 	// Reset the states
@@ -894,6 +1007,11 @@ HRESULT CIntelliViewView::GetImageDetails(_In_z_ LPCTSTR pszFilename)
 	return hr;
 }
 
+/**
+ * @brief Composes the next frame in a GIF animation
+ * @return S_OK on success, error HRESULT on failure
+ * @details Disposes current frame, overlays next frame, and sets timer for frame delay
+ */
 HRESULT CIntelliViewView::ComposeNextGifFrame()
 {
 	// Create the frame compose render target if required
@@ -925,7 +1043,13 @@ HRESULT CIntelliViewView::ComposeNextGifFrame()
 	return hr;
 }
 
-#pragma warning(suppress: 26429)
+/**
+ * @brief Creates a render target for GIF frame composition
+ * @param pRenderTarget Pointer to parent render target
+ * @param FrameComposeRT Reference to bitmap render target to create
+ * @return S_OK on success, error HRESULT on failure
+ * @details Creates a compatible bitmap render target sized to the GIF dimensions
+ */
 HRESULT CIntelliViewView::CreateGifFrameComposeRenderTarget(_In_ CRenderTarget* pRenderTarget, _Inout_ CBitmapRenderTarget& FrameComposeRT)
 {
 	// Validate our parameters
@@ -936,16 +1060,28 @@ HRESULT CIntelliViewView::CreateGifFrameComposeRenderTarget(_In_ CRenderTarget* 
 	return pRenderTarget->CreateCompatibleRenderTarget(FrameComposeRT, CD2DSizeF{ static_cast<FLOAT>(m_cxGifImage), static_cast<FLOAT>(m_cyGifImage) }) ? S_OK : E_FAIL;
 }
 
+/**
+ * @brief Checks if the current frame is the last frame in the animation
+ * @return true if at the last frame, false otherwise
+ */
 bool CIntelliViewView::IsLastFrame() noexcept
 {
 	return (m_nNextFrameIndex == 0);
 }
 
+/**
+ * @brief Checks if the animation has completed all loops
+ * @return true if animation is complete, false otherwise
+ * @details Returns true when loop count is reached and at the last frame
+ */
 bool CIntelliViewView::EndOfAnimation() noexcept
 {
 	return m_bHasLoop && IsLastFrame() && (m_nLoopNumber == (m_nTotalLoopCount + 1));
 }
 
+/**
+ * @brief Displays the print preview dialog
+ */
 void CIntelliViewView::OnFilePrintPreview()
 {
 #ifndef SHARED_HANDLERS
@@ -953,28 +1089,54 @@ void CIntelliViewView::OnFilePrintPreview()
 #endif
 }
 
+/**
+ * @brief Prepares the view for printing
+ * @param pInfo Pointer to CPrintInfo structure
+ * @return TRUE on success, FALSE on failure
+ */
 BOOL CIntelliViewView::OnPreparePrinting(CPrintInfo* pInfo)
 {
 	// default preparation
 	return DoPreparePrinting(pInfo);
 }
 
+/**
+ * @brief Called at the start of the printing process
+ * @param pDC Pointer to device context for printing (unused)
+ * @param pInfo Pointer to CPrintInfo structure (unused)
+ */
 void CIntelliViewView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
 	// TODO: add extra initialization before printing
 }
 
+/**
+ * @brief Called at the end of the printing process
+ * @param pDC Pointer to device context for printing (unused)
+ * @param pInfo Pointer to CPrintInfo structure (unused)
+ */
 void CIntelliViewView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
 	// TODO: add cleanup after printing
 }
 
+/**
+ * @brief Handles right mouse button up events
+ * @param nFlags Mouse event flags (unused)
+ * @param point Client coordinates of mouse position
+ * @details Converts to screen coordinates and displays context menu
+ */
 void CIntelliViewView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {
 	ClientToScreen(&point);
 	OnContextMenu(this, point);
 }
 
+/**
+ * @brief Displays the context menu at the specified position
+ * @param pWnd Pointer to window that received the context menu request (unused)
+ * @param point Screen coordinates where menu should appear
+ */
 void CIntelliViewView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 {
 #ifndef SHARED_HANDLERS
@@ -985,16 +1147,28 @@ void CIntelliViewView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 // CIntelliViewView diagnostics
 
 #ifdef _DEBUG
+/**
+ * @brief Validates the object's state (debug builds only)
+ * @details Performs diagnostic assertions to verify object integrity
+ */
 void CIntelliViewView::AssertValid() const
 {
 	CScrollView::AssertValid();
 }
 
+/**
+ * @brief Dumps the object's state to a diagnostic context (debug builds only)
+ * @param dc Reference to CDumpContext for diagnostic output
+ */
 void CIntelliViewView::Dump(CDumpContext& dc) const
 {
 	CScrollView::Dump(dc);
 }
 
+/**
+ * @brief Retrieves the associated document (debug version)
+ * @return Pointer to CIntelliViewDoc
+ */
 CIntelliViewDoc* CIntelliViewView::GetDocument() const // non-debug version is inline
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CIntelliViewDoc)));
@@ -1004,6 +1178,13 @@ CIntelliViewDoc* CIntelliViewView::GetDocument() const // non-debug version is i
 
 // CIntelliViewView message handlers
 
+/**
+ * @brief Handles Direct2D resource recreation
+ * @param wParam Not used
+ * @param lParam Not used
+ * @return 0L
+ * @details Resets all bitmaps and render targets, restarts animation if needed
+ */
 LRESULT CIntelliViewView::OnRecreatedResources(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	m_pImage.reset();
@@ -1026,7 +1207,10 @@ LRESULT CIntelliViewView::OnRecreatedResources(WPARAM /*wParam*/, LPARAM /*lPara
 	return 0L;
 }
 
-#pragma warning(suppress: 26434 26440)
+/**
+ * @brief Retrieves the associated document (non-debug version)
+ * @return Pointer to CIntelliViewDoc
+ */
 CIntelliViewDoc* CIntelliViewView::GetDocument()
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CIntelliViewDoc)));
@@ -1034,6 +1218,13 @@ CIntelliViewDoc* CIntelliViewView::GetDocument()
 	return static_cast<CIntelliViewDoc*>(m_pDocument);
 }
 
+/**
+ * @brief Handles Direct2D drawing operations
+ * @param wParam Not used
+ * @param lParam Pointer to CHwndRenderTarget for drawing
+ * @return TRUE on success, FALSE on failure
+ * @details Renders image with zoom, handles fullscreen display, draws filename overlay
+ */
 LRESULT CIntelliViewView::OnDraw2D(WPARAM /*wParam*/, LPARAM lParam)
 {
 	const CIntelliViewDoc* pDoc{ GetDocument() };
@@ -1217,6 +1408,11 @@ LRESULT CIntelliViewView::OnDraw2D(WPARAM /*wParam*/, LPARAM lParam)
 	return TRUE;
 }
 
+/**
+ * @brief Handles timer events for slideshow and animation
+ * @param nIDEvent Timer identifier
+ * @details Advances slideshow, GIF animation, or multi-page image frames based on timer type
+ */
 void CIntelliViewView::OnTimer(UINT_PTR nIDEvent)
 {
 	if ((m_nSlideshowTimerID == nIDEvent) && !theApp.m_bMessageBoxUp)
@@ -1252,6 +1448,10 @@ void CIntelliViewView::OnTimer(UINT_PTR nIDEvent)
 	}
 }
 
+/**
+ * @brief Zooms in on the image by 20%
+ * @details Increases zoom level, disables size-to-fit, and updates display
+ */
 void CIntelliViewView::OnZoomIn()
 {
 	m_nCurrentZoomLevelX = (m_nCurrentZoomLevelX / 20 * 20) + 20;
@@ -1263,6 +1463,11 @@ void CIntelliViewView::OnZoomIn()
 	Invalidate(TRUE);
 }
 
+/**
+ * @brief Updates the UI state of the zoom in command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables the command if size-to-fit is active or zoom level is below 300%
+ */
 void CIntelliViewView::OnUpdateZoomIn(CCmdUI* pCmdUI)
 {
 	if (m_pImage != nullptr)
@@ -1273,6 +1478,10 @@ void CIntelliViewView::OnUpdateZoomIn(CCmdUI* pCmdUI)
 		pCmdUI->Enable(FALSE);
 }
 
+/**
+ * @brief Zooms out on the image by 20%
+ * @details Decreases zoom level, disables size-to-fit, and updates display
+ */
 void CIntelliViewView::OnZoomOut()
 {
 	m_nCurrentZoomLevelX = (m_nCurrentZoomLevelX / 20 * 20) - 20;
@@ -1284,6 +1493,11 @@ void CIntelliViewView::OnZoomOut()
 	Invalidate(TRUE);
 }
 
+/**
+ * @brief Updates the UI state of the zoom out command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables the command if size-to-fit is active or zoom level is above 20%
+ */
 void CIntelliViewView::OnUpdateZoomOut(CCmdUI* pCmdUI)
 {
 	if (m_pImage != nullptr)
@@ -1294,6 +1508,10 @@ void CIntelliViewView::OnUpdateZoomOut(CCmdUI* pCmdUI)
 		pCmdUI->Enable(FALSE);
 }
 
+/**
+ * @brief Sets the image to actual size (100% zoom)
+ * @details Resets zoom level to 100%, disables size-to-fit, and updates display
+ */
 void CIntelliViewView::OnActualSize()
 {
 	m_nCurrentZoomLevelX = 100;
@@ -1305,6 +1523,11 @@ void CIntelliViewView::OnActualSize()
 	Invalidate(TRUE);
 }
 
+/**
+ * @brief Updates the UI state of the actual size command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables the command if size-to-fit is active or zoom level is not 100%
+ */
 void CIntelliViewView::OnUpdateActualSize(CCmdUI* pCmdUI)
 {
 	if (m_pImage != nullptr)
@@ -1315,6 +1538,10 @@ void CIntelliViewView::OnUpdateActualSize(CCmdUI* pCmdUI)
 		pCmdUI->Enable(FALSE);
 }
 
+/**
+ * @brief Toggles the best fit (size-to-fit) mode
+ * @details Enables or disables automatic sizing of image to fit the window
+ */
 void CIntelliViewView::OnBestFit()
 {
 	m_bSizeToFit = !m_bSizeToFit;
@@ -1325,6 +1552,11 @@ void CIntelliViewView::OnBestFit()
 	Invalidate(TRUE);
 }
 
+/**
+ * @brief Updates the UI state of the best fit command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Sets check mark if size-to-fit is enabled, only enabled when image is loaded
+ */
 void CIntelliViewView::OnUpdateBestFit(CCmdUI* pCmdUI)
 {
 	if (m_pImage != nullptr)

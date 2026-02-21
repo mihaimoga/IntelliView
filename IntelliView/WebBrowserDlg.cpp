@@ -33,6 +33,10 @@ CWebBrowserDlg::~CWebBrowserDlg()
 {
 }
 
+/**
+ * @brief Exchanges data between dialog controls and member variables
+ * @param pDX Pointer to a CDataExchange object used for data exchange and validation
+ */
 void CWebBrowserDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
@@ -45,28 +49,35 @@ END_MESSAGE_MAP()
 
 // CWebBrowserDlg message handlers
 
+/**
+ * @brief Initializes the dialog when it is created
+ * @return TRUE to set focus to the first control, FALSE otherwise
+ * @note Creates and configures the embedded web browser control asynchronously.
+ *       The browser navigates to USER_MANUAL_URL and registers a callback to
+ *       update the dialog title when the page title changes.
+ */
 BOOL CWebBrowserDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-    CRect rectClient;
-    GetClientRect(rectClient);
+	CRect rectClient;
+	GetClientRect(rectClient);
 
-    m_pCustomControl.CreateAsync(
-        WS_VISIBLE | WS_CHILD,
-        rectClient,
-        this,
-        1,
-        [this]() {
-            m_pCustomControl.SetParentView((CView*)this);
-            m_pCustomControl.DisablePopups();
-            m_pCustomControl.Navigate(USER_MANUAL_URL, nullptr);
+	m_pCustomControl.CreateAsync(
+		WS_VISIBLE | WS_CHILD,
+		rectClient,
+		this,
+		1,
+		[this]() {
+			m_pCustomControl.SetParentView((CView*)this);
+			m_pCustomControl.DisablePopups();
+			m_pCustomControl.Navigate(USER_MANUAL_URL, nullptr);
 
-            m_pCustomControl.RegisterCallback(CWebBrowser::CallbackType::TitleChanged, [this]() {
-                CString strTitle = m_pCustomControl.GetTitle();
-                SetWindowText(strTitle);
-                });
-        });
+			m_pCustomControl.RegisterCallback(CWebBrowser::CallbackType::TitleChanged, [this]() {
+				CString strTitle = m_pCustomControl.GetTitle();
+				SetWindowText(strTitle);
+				});
+		});
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE

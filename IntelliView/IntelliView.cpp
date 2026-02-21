@@ -77,12 +77,14 @@ CIntelliViewApp::CIntelliViewApp() noexcept : m_pInstanceChecker(_T("IntelliView
 	// Place all significant initialization in InitInstance
 }
 
-// The one and only CIntelliViewApp object
-
+/** @brief The one and only CIntelliViewApp object */
 CIntelliViewApp theApp;
 
-// CIntelliViewApp initialization
-
+/**
+ * @brief Initializes the application instance
+ * @return TRUE if initialization succeeds, FALSE otherwise
+ * @note Sets up common controls, OLE, document templates, and main window
+ */
 BOOL CIntelliViewApp::InitInstance()
 {
 	// InitCommonControlsEx() is required on Windows XP if an application
@@ -183,6 +185,11 @@ BOOL CIntelliViewApp::InitInstance()
 	return TRUE;
 }
 
+/**
+ * @brief Called when the application instance is terminating
+ * @return Exit code for the application
+ * @note Cleans up OLE resources before application termination
+ */
 int CIntelliViewApp::ExitInstance()
 {
 	//TODO: handle additional resources you may have added
@@ -193,8 +200,11 @@ int CIntelliViewApp::ExitInstance()
 
 // CIntelliViewApp message handlers
 
-// CAboutDlg dialog used for App About
-
+/**
+ * @brief About dialog class for displaying application information
+ * @note Shows application version (32-bit or 64-bit), license information,
+ *       and contact links (website, email, contributors)
+ */
 class CAboutDlg : public CDialog
 {
 public:
@@ -222,10 +232,18 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
+/**
+ * @brief Constructor for CAboutDlg
+ */
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 {
 }
 
+/**
+ * @brief Exchanges data between dialog controls and member variables
+ * @param pDX Pointer to a CDataExchange object used for data exchange and validation
+ * @note Maps version label, warning text, and hyperlink controls to member variables
+ */
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
@@ -330,16 +348,28 @@ void CIntelliViewApp::PreLoadState()
 	GetContextMenuManager()->AddMenu(strName, IDR_POPUP_EDIT);
 }
 
+/**
+ * @brief Loads custom application state from registry
+ * @note Currently not implemented
+ */
 void CIntelliViewApp::LoadCustomState()
 {
 }
 
+/**
+ * @brief Saves custom application state to registry
+ * @note Currently not implemented
+ */
 void CIntelliViewApp::SaveCustomState()
 {
 }
 
 // CIntelliViewApp message handlers
 
+/**
+ * @brief Helper function to get pointer to the main frame window
+ * @return Pointer to the CMainFrame instance
+ */
 CMainFrame* GetMainFrame()
 {
 #pragma warning(suppress: 26466)

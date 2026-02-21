@@ -28,6 +28,11 @@ IntelliView. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #define new DEBUG_NEW
 #endif
 
+/**
+ * @class CMainFrame
+ * @brief Main application frame window for IntelliView MDI application
+ */
+
 // CMainFrame
 
 IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWndEx)
@@ -50,15 +55,28 @@ END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
 
+/**
+ * @brief Constructs a new CMainFrame object
+ * @details Initializes fullscreen state to false and window placement structure
+ */
 CMainFrame::CMainFrame() noexcept : m_bFullScreen{ false },
 	m_wpPrev{}
 {
 }
 
+/**
+ * @brief Destroys the CMainFrame object
+ */
 CMainFrame::~CMainFrame()
 {
 }
 
+/**
+ * @brief Handles the WM_CREATE message to initialize the frame window
+ * @param lpCreateStruct Pointer to CREATESTRUCT containing window creation parameters
+ * @return 0 on success, -1 on failure
+ * @details Sets up ribbon bar, MDI tabbed groups, docking manager, and visual manager
+ */
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CMDIFrameWndEx::OnCreate(lpCreateStruct) == -1)
@@ -110,6 +128,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
+/**
+ * @brief Translates window messages before they are dispatched
+ * @param pMsg Pointer to MSG structure containing the message to process
+ * @return TRUE if message was translated and should not be dispatched, FALSE otherwise
+ * @details Handles ESC key to exit fullscreen mode
+ */
 BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 {
 	// Exit out of fullscreen mode if the user hits "Escape"
@@ -120,6 +144,11 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 	return __super::PreTranslateMessage(pMsg);
 }
 
+/**
+ * @brief Modifies the window class or styles before window creation
+ * @param cs Reference to CREATESTRUCT containing window creation parameters
+ * @return TRUE on success, FALSE on failure
+ */
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
 	if( !CMDIFrameWndEx::PreCreateWindow(cs) )
@@ -133,11 +162,19 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 // CMainFrame diagnostics
 
 #ifdef _DEBUG
+/**
+ * @brief Validates the object's state (debug builds only)
+ * @details Performs diagnostic assertions to verify object integrity
+ */
 void CMainFrame::AssertValid() const
 {
 	CMDIFrameWndEx::AssertValid();
 }
 
+/**
+ * @brief Dumps the object's state to a diagnostic context (debug builds only)
+ * @param dc Reference to CDumpContext for diagnostic output
+ */
 void CMainFrame::Dump(CDumpContext& dc) const
 {
 	CMDIFrameWndEx::Dump(dc);
@@ -146,58 +183,96 @@ void CMainFrame::Dump(CDumpContext& dc) const
 
 // CMainFrame message handlers
 
+/**
+ * @brief Handles the Window Manager command
+ * @details Displays the windows management dialog for MDI child windows
+ */
 void CMainFrame::OnWindowManager()
 {
 	ShowWindowsDialog();
 }
 
+/**
+ * @brief Opens the developer's Twitter/X profile in the default browser
+ */
 void CMainFrame::OnTwitter()
 {
 	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://x.com/stefanmihaimoga"), nullptr, nullptr, SW_SHOW);
 }
 
+/**
+ * @brief Opens the developer's LinkedIn profile in the default browser
+ */
 void CMainFrame::OnLinkedin()
 {
 	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://www.linkedin.com/in/stefanmihaimoga/"), nullptr, nullptr, SW_SHOW);
 }
 
+/**
+ * @brief Opens the developer's Facebook profile in the default browser
+ */
 void CMainFrame::OnFacebook()
 {
 	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://www.facebook.com/stefanmihaimoga"), nullptr, nullptr, SW_SHOW);
 }
 
+/**
+ * @brief Opens the developer's Instagram profile in the default browser
+ */
 void CMainFrame::OnInstagram()
 {
 	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://www.instagram.com/stefanmihaimoga/"), nullptr, nullptr, SW_SHOW);
 }
 
+/**
+ * @brief Opens the GitHub Issues page for IntelliView in the default browser
+ */
 void CMainFrame::OnIssues()
 {
 	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://github.com/mihaimoga/IntelliView/issues"), nullptr, nullptr, SW_SHOW);
 }
 
+/**
+ * @brief Opens the GitHub Discussions page for IntelliView in the default browser
+ */
 void CMainFrame::OnDiscussions()
 {
 	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://github.com/mihaimoga/IntelliView/discussions"), nullptr, nullptr, SW_SHOW);
 }
 
+/**
+ * @brief Opens the GitHub Wiki page for IntelliView in the default browser
+ */
 void CMainFrame::OnWiki()
 {
 	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://github.com/mihaimoga/IntelliView/wiki"), nullptr, nullptr, SW_SHOW);
 }
 
+/**
+ * @brief Displays the user manual in a web browser dialog
+ * @details Opens a modal dialog containing the application's user manual
+ */
 void CMainFrame::OnUserManual()
 {
 	CWebBrowserDlg dlgWebBrowser(this);
 	dlgWebBrowser.DoModal();
 }
 
+/**
+ * @brief Checks for application updates
+ * @details Opens a modal dialog to check for and download application updates
+ */
 void CMainFrame::OnCheckForUpdates()
 {
 	CCheckForUpdatesDlg dlgCheckForUpdates(this);
 	dlgCheckForUpdates.DoModal();
 }
 
+/**
+ * @brief Toggles fullscreen mode on/off
+ * @details Switches between normal window mode and fullscreen mode by adjusting
+ *          window placement to cover the entire monitor. Optionally hides the cursor.
+ */
 void CMainFrame::OnFullscreen()
 {
 	WINDOWPLACEMENT wpNew{};
@@ -246,6 +321,11 @@ void CMainFrame::OnFullscreen()
 	SetWindowPlacement(&wpNew);
 }
 
+/**
+ * @brief Updates the UI state of the fullscreen command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Sets the check state of the fullscreen menu/button based on current mode
+ */
 void CMainFrame::OnUpdateFullscreen(CCmdUI* pCmdUI)
 {
 #pragma warning(suppress: 26486)

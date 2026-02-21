@@ -35,6 +35,12 @@ IntelliView. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #define new DEBUG_NEW
 #endif
 
+/**
+ * @class CIntelliViewDoc
+ * @brief Document class for IntelliView image viewer application
+ * @details Manages document data, file operations, and multi-page/animated image navigation
+ */
+
 // CIntelliViewDoc
 
 IMPLEMENT_DYNCREATE(CIntelliViewDoc, CDocument)
@@ -66,14 +72,25 @@ END_MESSAGE_MAP()
 
 // CIntelliViewDoc construction/destruction
 
+/**
+ * @brief Constructs a new CIntelliViewDoc object
+ */
 CIntelliViewDoc::CIntelliViewDoc() noexcept
 {
 }
 
+/**
+ * @brief Destroys the CIntelliViewDoc object
+ */
 CIntelliViewDoc::~CIntelliViewDoc()
 {
 }
 
+/**
+ * @brief Creates a new document
+ * @return TRUE on success, FALSE on failure
+ * @details Called by the framework to create a new document instance
+ */
 BOOL CIntelliViewDoc::OnNewDocument()
 {
 	if (!CDocument::OnNewDocument())
@@ -87,6 +104,11 @@ BOOL CIntelliViewDoc::OnNewDocument()
 
 // CIntelliViewDoc serialization
 
+/**
+ * @brief Serializes the document data
+ * @param ar Reference to CArchive for reading/writing data
+ * @details Currently not implemented for this image viewer application
+ */
 void CIntelliViewDoc::Serialize(CArchive& ar)
 {
 	if (ar.IsStoring())
@@ -102,6 +124,12 @@ void CIntelliViewDoc::Serialize(CArchive& ar)
 #ifdef SHARED_HANDLERS
 
 // Support for thumbnails
+/**
+ * @brief Draws a thumbnail representation of the document
+ * @param dc Reference to CDC (device context) to draw on
+ * @param lprcBounds Pointer to RECT structure defining thumbnail bounds
+ * @details Used by Windows for thumbnail preview generation
+ */
 void CIntelliViewDoc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 {
 	// Modify this code to draw the document's data
@@ -123,6 +151,10 @@ void CIntelliViewDoc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 }
 
 // Support for Search Handlers
+/**
+ * @brief Initializes search content for the document
+ * @details Sets up searchable content for Windows Search integration
+ */
 void CIntelliViewDoc::InitializeSearchContent()
 {
 	CString strSearchContent;
@@ -133,6 +165,11 @@ void CIntelliViewDoc::InitializeSearchContent()
 	SetSearchContent(strSearchContent);
 }
 
+/**
+ * @brief Sets the search content for the document
+ * @param value Reference to CString containing the search content
+ * @details Adds or removes search content chunks for Windows Search indexing
+ */
 void CIntelliViewDoc::SetSearchContent(const CString& value)
 {
 	if (value.IsEmpty())
@@ -156,11 +193,19 @@ void CIntelliViewDoc::SetSearchContent(const CString& value)
 // CIntelliViewDoc diagnostics
 
 #ifdef _DEBUG
+/**
+ * @brief Validates the object's state (debug builds only)
+ * @details Performs diagnostic assertions to verify object integrity
+ */
 void CIntelliViewDoc::AssertValid() const
 {
 	CDocument::AssertValid();
 }
 
+/**
+ * @brief Dumps the object's state to a diagnostic context (debug builds only)
+ * @param dc Reference to CDumpContext for diagnostic output
+ */
 void CIntelliViewDoc::Dump(CDumpContext& dc) const
 {
 	CDocument::Dump(dc);
@@ -169,6 +214,11 @@ void CIntelliViewDoc::Dump(CDumpContext& dc) const
 
 // CIntelliViewDoc commands
 
+/**
+ * @brief Retrieves the associated view object
+ * @return Pointer to CIntelliViewView, or nullptr if no view exists
+ * @details Finds the first CIntelliViewView attached to this document
+ */
 CIntelliViewView* CIntelliViewDoc::GetView() const
 {
 	// find the first view - if there are no views
@@ -192,6 +242,10 @@ CIntelliViewView* CIntelliViewDoc::GetView() const
 	return nullptr;
 }
 
+/**
+ * @brief Deletes the document contents
+ * @details Resets the image pointer in the associated view and clears document data
+ */
 void CIntelliViewDoc::DeleteContents()
 {
 	CIntelliViewView* pView{ GetView() };
@@ -203,6 +257,12 @@ void CIntelliViewDoc::DeleteContents()
 	__super::DeleteContents();
 }
 
+/**
+ * @brief Opens and loads an image document from disk
+ * @param lpszPathName Pointer to string containing the full path to the image file
+ * @return TRUE on success, FALSE on failure
+ * @details Loads image files including QOI format and other standard formats, detects multi-page images
+ */
 BOOL CIntelliViewDoc::OnOpenDocument(LPCTSTR lpszPathName)
 {
 	DeleteContents();
@@ -260,6 +320,10 @@ BOOL CIntelliViewDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	return TRUE;
 }
 
+/**
+ * @brief Navigates to the first page of a multi-page image
+ * @details Resets active page index to 0 and refreshes the view
+ */
 void CIntelliViewDoc::OnFirstPage()
 {
 #pragma warning(suppress: 26429)
@@ -271,7 +335,11 @@ void CIntelliViewDoc::OnFirstPage()
 	pView->InvalidateRect(nullptr, FALSE);
 }
 
-
+/**
+ * @brief Updates the UI state of the first page command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables/disables and checks the first page button based on document state
+ */
 void CIntelliViewDoc::OnUpdateFirstPage(CCmdUI* pCmdUI)
 {
 	const CIntelliViewView* pView{ GetView() };
@@ -289,7 +357,10 @@ void CIntelliViewDoc::OnUpdateFirstPage(CCmdUI* pCmdUI)
 		pCmdUI->Enable(FALSE);
 }
 
-
+/**
+ * @brief Navigates to the previous page of a multi-page image
+ * @details Decrements the active page index and refreshes the view
+ */
 void CIntelliViewDoc::OnPrevPage()
 {
 #pragma warning(suppress: 26429)
@@ -301,7 +372,11 @@ void CIntelliViewDoc::OnPrevPage()
 	pView->InvalidateRect(nullptr, FALSE);
 }
 
-
+/**
+ * @brief Updates the UI state of the previous page command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables the button only if on a multi-page image and not on the first page
+ */
 void CIntelliViewDoc::OnUpdatePrevPage(CCmdUI* pCmdUI)
 {
 	const CIntelliViewView* pView{ GetView() };
@@ -310,6 +385,10 @@ void CIntelliViewDoc::OnUpdatePrevPage(CCmdUI* pCmdUI)
 	pCmdUI->Enable((pView->m_ImageType == CIntelliViewView::IMAGE_TYPE::MULTIPAGE_IMAGE) && (pView->m_nActivePage > 0)); //NOLINT(clang-analyzer-core.NullDereference)
 }
 
+/**
+ * @brief Navigates to the next page of a multi-page image
+ * @details Increments the active page index and refreshes the view
+ */
 void CIntelliViewDoc::OnNextPage()
 {
 #pragma warning(suppress: 26429)
@@ -321,6 +400,11 @@ void CIntelliViewDoc::OnNextPage()
 	pView->InvalidateRect(nullptr, FALSE);
 }
 
+/**
+ * @brief Updates the UI state of the next page command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables the button only if on a multi-page image and not on the last page
+ */
 void CIntelliViewDoc::OnUpdateNextPage(CCmdUI* pCmdUI)
 {
 	const CIntelliViewView* pView{ GetView() };
@@ -329,6 +413,10 @@ void CIntelliViewDoc::OnUpdateNextPage(CCmdUI* pCmdUI)
 	pCmdUI->Enable((pView->m_ImageType == CIntelliViewView::IMAGE_TYPE::MULTIPAGE_IMAGE) && (pView->m_nActivePage < static_cast<int>(pView->m_nFrames - 1))); //NOLINT(clang-analyzer-core.NullDereference)
 }
 
+/**
+ * @brief Navigates to the last page of a multi-page image
+ * @details Sets the active page to the last frame and refreshes the view
+ */
 void CIntelliViewDoc::OnLastPage()
 {
 #pragma warning(suppress: 26429)
@@ -340,6 +428,11 @@ void CIntelliViewDoc::OnLastPage()
 	pView->InvalidateRect(nullptr, FALSE);
 }
 
+/**
+ * @brief Updates the UI state of the last page command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables/disables and checks the last page button based on document state
+ */
 void CIntelliViewDoc::OnUpdateLastPage(CCmdUI* pCmdUI)
 {
 	const CIntelliViewView* pView{ GetView() };
@@ -357,6 +450,10 @@ void CIntelliViewDoc::OnUpdateLastPage(CCmdUI* pCmdUI)
 		pCmdUI->Enable(FALSE);
 }
 
+/**
+ * @brief Opens a specific page by number in a multi-page image
+ * @details Displays a dialog for the user to enter a page number and navigates to it
+ */
 void CIntelliViewDoc::OnOpenPage()
 {
 #pragma warning(suppress: 26429)
@@ -372,6 +469,11 @@ void CIntelliViewDoc::OnOpenPage()
 	pView->InvalidateRect(nullptr, FALSE);
 }
 
+/**
+ * @brief Updates the UI state of the open page command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables the command only for multi-page images
+ */
 void CIntelliViewDoc::OnUpdateOpenPage(CCmdUI* pCmdUI)
 {
 	const CIntelliViewView* pView{ GetView() };
@@ -380,6 +482,10 @@ void CIntelliViewDoc::OnUpdateOpenPage(CCmdUI* pCmdUI)
 	pCmdUI->Enable(pView->m_ImageType == CIntelliViewView::IMAGE_TYPE::MULTIPAGE_IMAGE); //NOLINT(clang-analyzer-core.NullDereference)
 }
 
+/**
+ * @brief Toggles animation playback for multi-page or animated GIF images
+ * @details Starts or stops automatic page advancement or GIF frame composition
+ */
 void CIntelliViewDoc::OnAnimation()
 {
 #pragma warning(suppress: 26429)
@@ -401,6 +507,11 @@ void CIntelliViewDoc::OnAnimation()
 		pView->StopAnimation();
 }
 
+/**
+ * @brief Updates the UI state of the animation command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables/disables and checks the animation button based on image type and animation state
+ */
 void CIntelliViewDoc::OnUpdateAnimation(CCmdUI* pCmdUI)
 {
 	const CIntelliViewView* pView{ GetView() };
@@ -418,6 +529,10 @@ void CIntelliViewDoc::OnUpdateAnimation(CCmdUI* pCmdUI)
 		pCmdUI->Enable(false);
 }
 
+/**
+ * @brief Renames the current image file
+ * @details Displays a rename dialog and uses Shell API to rename the file with undo support
+ */
 void CIntelliViewDoc::OnFileRename()
 {
 	// Get the name of the current file
@@ -479,12 +594,21 @@ void CIntelliViewDoc::OnFileRename()
 	}
 }
 
+/**
+ * @brief Updates the UI state of the file rename command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables the command only when an image is loaded
+ */
 void CIntelliViewDoc::OnUpdateFileRename(CCmdUI* pCmdUI)
 {
 #pragma warning(suppress: 26486 26489)
 	pCmdUI->Enable(GetView()->m_pImage != nullptr);
 }
 
+/**
+ * @brief Moves the current image file to a different directory
+ * @details Prompts user to select a destination folder and uses Shell API to move the file
+ */
 void CIntelliViewDoc::OnFileMove()
 {
 	// Get the name of the current file
@@ -553,12 +677,21 @@ void CIntelliViewDoc::OnFileMove()
 	}
 }
 
+/**
+ * @brief Updates the UI state of the file move command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables the command only when an image is loaded
+ */
 void CIntelliViewDoc::OnUpdateFileMove(CCmdUI* pCmdUI)
 {
 #pragma warning(suppress: 26486 26489)
 	pCmdUI->Enable(GetView()->m_pImage != nullptr);
 }
 
+/**
+ * @brief Copies the current image file to a different directory
+ * @details Prompts user to select a destination folder and uses Shell API to copy the file
+ */
 void CIntelliViewDoc::OnFileCopy()
 {
 	// Get the name of the current file
@@ -611,12 +744,21 @@ void CIntelliViewDoc::OnFileCopy()
 	}
 }
 
+/**
+ * @brief Updates the UI state of the file copy command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables the command only when an image is loaded
+ */
 void CIntelliViewDoc::OnUpdateFileCopy(CCmdUI* pCmdUI)
 {
 #pragma warning(suppress: 26486 26489)
 	pCmdUI->Enable(GetView()->m_pImage != nullptr);
 }
 
+/**
+ * @brief Deletes the current image file
+ * @details Uses Shell API to delete the file, supports undo unless SHIFT key is held
+ */
 void CIntelliViewDoc::OnFileDelete()
 {
 	// Create a Multi SZ string with the file to delete
@@ -656,12 +798,21 @@ void CIntelliViewDoc::OnFileDelete()
 	}
 }
 
+/**
+ * @brief Updates the UI state of the file delete command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables the command only when an image is loaded
+ */
 void CIntelliViewDoc::OnUpdateFileDelete(CCmdUI* pCmdUI)
 {
 #pragma warning(suppress: 26486 26489)
 	pCmdUI->Enable(GetView()->m_pImage != nullptr);
 }
 
+/**
+ * @brief Displays the Windows properties dialog for the current image file
+ * @details Uses ShellExecuteEx to show the file's property sheet
+ */
 void CIntelliViewDoc::OnProperties()
 {
 	CString sPathName{ GetPathName() };
@@ -678,6 +829,11 @@ void CIntelliViewDoc::OnProperties()
 	sPathName.ReleaseBuffer();
 }
 
+/**
+ * @brief Updates the UI state of the properties command
+ * @param pCmdUI Pointer to CCmdUI object representing the user interface item
+ * @details Enables the command only when an image is loaded
+ */
 void CIntelliViewDoc::OnUpdateProperties(CCmdUI* pCmdUI)
 {
 #pragma warning(suppress: 26486 26489)
