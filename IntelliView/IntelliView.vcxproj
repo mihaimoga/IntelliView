@@ -240,6 +240,7 @@
     <ResourceCompile Include="IntelliView.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\IntelliView.png" />
     <Image Include="res\buttons.bmp" />
     <Image Include="res\crosshatch.png" />
     <Image Include="res\filelarge.bmp" />
@@ -257,6 +258,7 @@
     <Image Include="res\writesmall.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\IntelliView.html" />
     <None Include="packages.config" />
     <None Include="ReleaseNotes.html" />
     <None Include="res\IntelliView.rc2" />
