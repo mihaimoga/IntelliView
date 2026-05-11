@@ -177,10 +177,10 @@
     <None Include="res\IntelliView.rc2">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReleaseNotes.html" />
-    <None Include="SoftwareContentRegister.html" />
     <None Include="packages.config" />
     <None Include="..\IntelliView.html" />
+    <None Include="..\ReleaseNotes.html" />
+    <None Include="..\SoftwareContentRegister.html" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
