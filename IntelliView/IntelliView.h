@@ -49,6 +49,7 @@ public:
 	bool m_bAskMeOnDelete;
 	bool m_bSizeToFit;
 	bool m_bAutoRotate;
+	CStringArray m_arrSessionFiles;
 
 // Overrides
 public:
