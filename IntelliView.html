@@ -75,6 +75,48 @@
 						<li><strong>Open Page Number</strong>: View a specific page in the current image.</li>
 						<li><strong>Start/Stop Animation</strong>: Starts or stops the animation for the current image.</li>
 					</ul>
+
+					<h2 id="roadmap">Roadmap</h2>
+					<p>This roadmap outlines where <em>IntelliView</em> is heading. It brings together the next steps for the features that are already there, ideas for new ones, and the maintenance work that goes into every release. Items are grouped by horizon rather than by date, and their order may change as feedback arrives or as the libraries <em>IntelliView</em> builds on evolve, so please treat it as a statement of intent, not a promise. For everything that has already shipped, see the <a href="ReleaseNotes.html">Release Notes</a>.</p>
+					<p class="text-body-secondary"><small>Last reviewed: November 2026 (version 1.08 in development).</small></p>
+
+					<h3>Now <small class="text-body-secondary fw-normal">in progress and ongoing</small></h3>
+					<ul>
+						<li><strong>Version 1.08</strong>: session restore, which reopens the images that were open when <em>IntelliView</em> was last closed, and a <em>Check for Updates</em> dialog that stays open when no new version is found.</li>
+						<li><strong>Up-to-date components</strong>: releases keep picking up the latest Microsoft Edge WebView2 (embedded web browser) and genUp4win (automatic updates).</li>
+						<li><strong>Stability, security and performance</strong>: bug fixes, security updates and performance tuning continue alongside new features.</li>
+					</ul>
+
+					<h3>Next <small class="text-body-secondary fw-normal">planned, next in line</small></h3>
+					<ul>
+						<li><strong>Browse the images in a folder</strong>: move to the previous and next image in the same folder, instead of only between the pages of a multi-page image.</li>
+						<li><strong>Slideshow</strong>: step through the images of a folder automatically in full screen mode, at a configurable interval.</li>
+						<li><strong>Options dialog</strong>: one place to change settings that are fixed today, such as the slideshow interval, showing the file name in full screen mode and asking for confirmation before deleting a file.</li>
+					</ul>
+					<p>Slideshow builds on browsing the images in a folder, and its interval is one of the settings the Options dialog is meant to expose, so these three items are likely to be tackled together.</p>
+
+					<h3>Later <small class="text-body-secondary fw-normal">planned, larger efforts</small></h3>
+					<ul>
+						<li><strong>Printing and print preview</strong>: print the current image, scaled to fit the page, with a print preview.</li>
+						<li><strong>Save As and format conversion</strong>: save the current image in another format, using the Windows Imaging Component encoders and the built-in QOI writer.</li>
+						<li><strong>Copy to the clipboard</strong>: copy the current image so that it can be pasted into other applications.</li>
+						<li><strong>Rotate and flip</strong>: turn the image in 90-degree steps and mirror it, in addition to the automatic EXIF orientation that is applied today.</li>
+					</ul>
+
+					<h3>Under consideration <small class="text-body-secondary fw-normal">ideas, not yet committed</small></h3>
+					<ul>
+						<li><strong>Mouse and keyboard navigation</strong>: zoom with the mouse wheel, pan by dragging the image, and keyboard shortcuts for the commands that are only available through the ribbon and the context menu today.</li>
+						<li><strong>Easier ways to open images</strong>: drag &amp; drop onto the window, and an installer option that registers <em>IntelliView</em> as an image handler in Windows, so that file associations no longer have to be set up manually.</li>
+						<li><strong>Image information</strong>: show EXIF and other metadata inside <em>IntelliView</em>, in addition to the Windows Properties dialog that is used today.</li>
+						<li><strong>Status bar and thumbnails</strong>: a status bar showing the zoom level and the position in the folder (for example &ldquo;3 of 24&rdquo;), and an optional strip of thumbnails.</li>
+						<li><strong>Localized user interface</strong>: translated ribbon, commands and messages (today only the status messages of the updater are translated).</li>
+						<li><strong>More image formats</strong>: besides QOI, <em>IntelliView</em> opens the formats that the Windows Imaging Component codecs installed on the PC can decode, so formats such as WebP, HEIC/AVIF or camera RAW depend on those codecs; built-in decoders could remove that dependency.</li>
+						<li><strong>Native ARM64 and high-DPI support</strong>: a native ARM64 build for Windows on Arm devices (<em>IntelliView</em> is currently built for x86 and x64) and Per-Monitor V2 DPI awareness for a sharper interface on high-DPI and mixed-DPI displays.</li>
+					</ul>
+
+					<h3>Help shape the roadmap</h3>
+					<p>Want to see something sooner, or have an idea that is not listed here? <a href="https://github.com/mihaimoga/IntelliView/issues" target="_blank">Open an issue</a> or start a conversation in <a href="https://github.com/mihaimoga/IntelliView/discussions" target="_blank">Discussions</a>. Contributions are welcome as well: any item above can be picked up through a pull request, as described in the next section.</p>
+
 					<h2>Create and Submit your Pull Request</h2>
 					<p>As noted in the <a href="https://github.com/mihaimoga/IntelliView/blob/main/CONTRIBUTING.md" target="_blank">Contributing Rules</a> for <em>IntelliView</em>, all Pull Requests need to be attached to a issue on GitHub. So the first step is to create an issue which requests that the functionality be improved (if it was already there) or added (if it was not yet there); in your issue, be sure to explain that you have the functionality definition ready, and will be submitting a Pull Request. The second step is to use the GitHub interface to create the Pull Request from your fork into the main repository. The final step is to wait for and respond to feedback from the developers as needed, until such time as your PR is accepted or rejected.</p>
 				</div>
